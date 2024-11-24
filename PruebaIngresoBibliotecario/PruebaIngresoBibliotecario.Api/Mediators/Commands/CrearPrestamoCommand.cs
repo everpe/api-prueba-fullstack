@@ -26,7 +26,7 @@ namespace PruebaIngresoBibliotecario.Api.Mediators.Commands
             RuleFor(x => x.IdentificacionUsuario)
                 .NotEmpty()
                 .WithMessage("La identificación del usuario es requerida.")
-                .Length(1, 10)
+                .MaximumLength(10)
                 .WithMessage("La identificación debe tener entre 1 y 10 caracteres.");
 
             RuleFor(x => x.TipoUsuario)

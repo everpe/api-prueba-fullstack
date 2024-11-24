@@ -14,7 +14,7 @@ namespace PruebaIngresoBibliotecario.Api.Infraestructure
                 context.Usuarios.AddRange(
                         new Usuario { Nombre = "Ever", IdentificacionUsuario = "AFILIADO01", TipoUsuario = TipoUsuario.AFILIADO },
                         new Usuario { Nombre = "Pedro", IdentificacionUsuario = "EMPLEADO01", TipoUsuario = TipoUsuario.EMPLEADO },
-                        new Usuario { Nombre = "Armando", IdentificacionUsuario = "INVITADO01", TipoUsuario = TipoUsuario.INVITADO }
+                        new Usuario { Nombre = "Armando", IdentificacionUsuario = "123456789", TipoUsuario = TipoUsuario.INVITADO }
                 );
             }
 
