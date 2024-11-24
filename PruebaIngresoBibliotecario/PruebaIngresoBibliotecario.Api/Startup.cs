@@ -6,6 +6,10 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using AutoMapper;
+using PruebaIngresoBibliotecario.Api.Interfaces;
+using PruebaIngresoBibliotecario.Api.Services;
 
 
 
@@ -33,9 +37,15 @@ namespace PruebaIngresoBibliotecario.Api
                 opt.UseInMemoryDatabase("PruebaIngreso");
             });
 
+            services.AddScoped<IProductService, ProductService>();
+
             services.AddControllers(mvcOpts =>
             {
             });
+
+            services.AddAutoMapper(typeof(Startup));
+            services.AddMediatR(typeof(Startup).Assembly);
+
 
         }
 
