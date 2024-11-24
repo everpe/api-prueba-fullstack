@@ -14,6 +14,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using PruebaIngresoBibliotecario.Api.Mediators.Behaviors;
 using PruebaIngresoBibliotecario.Api.Infraestructure;
+using Microsoft.AspNetCore.Http;
 
 
 
@@ -64,6 +65,27 @@ namespace PruebaIngresoBibliotecario.Api
 
 
             app.UseHttpsRedirection();
+            app.Use(async (context, next) =>
+            {
+                try
+                {
+                    await next();
+                }
+                catch (CustomHttpException ex)
+                {
+                    context.Response.StatusCode = ex.StatusCode;
+                    context.Response.ContentType = "application/json";
+                    var response = System.Text.Json.JsonSerializer.Serialize(ex.Response);
+                    await context.Response.WriteAsync(response);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    context.Response.ContentType = "application/json";
+                    var response = System.Text.Json.JsonSerializer.Serialize(new { mensaje = "Ocurrió un error interno en el servidor." });
+                    await context.Response.WriteAsync(response);
+                }
+            });
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -73,6 +95,7 @@ namespace PruebaIngresoBibliotecario.Api
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
             // Ejecuta los seeds al inicio
             using var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<PersistenceContext>();

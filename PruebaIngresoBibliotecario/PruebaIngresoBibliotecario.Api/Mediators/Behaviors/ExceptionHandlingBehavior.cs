@@ -19,19 +19,32 @@ namespace PruebaIngresoBibliotecario.Api.Mediators.Behaviors
             }
             catch (FluentValidation.ValidationException ex)
             {
-                // Captura errores de FluentValidation y lanza un 400 con los mensajes de error combinados
                 var errorMessage = string.Join("; ", ex.Errors.Select(e => e.ErrorMessage));
-                throw new BadHttpRequestException(errorMessage, StatusCodes.Status400BadRequest);
+                throw new CustomHttpException(new { mensaje = errorMessage }, StatusCodes.Status400BadRequest);
             }
             catch (BusinessException ex)
             {
-                throw new BadHttpRequestException(ex.Message, StatusCodes.Status400BadRequest);
+                throw new CustomHttpException(new { mensaje = ex.Message }, ex.StatusCode);
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrió un error interno en el servidor.", ex);
+                throw new CustomHttpException(new { mensaje = "Ocurrió un error interno en el servidor." }, StatusCodes.Status500InternalServerError);
             }
+
         }
     }
+
+    public class CustomHttpException : Exception
+    {
+        public object Response { get; }
+        public int StatusCode { get; }
+
+        public CustomHttpException(object response, int statusCode)
+        {
+            Response = response;
+            StatusCode = statusCode;
+        }
+    }
+
 
 }

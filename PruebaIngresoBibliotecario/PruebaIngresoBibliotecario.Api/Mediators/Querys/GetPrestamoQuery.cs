@@ -8,6 +8,7 @@ using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PruebaIngresoBibliotecario.Api.Interfaces;
+using FluentValidation;
 
 namespace PruebaIngresoBibliotecario.Api.Mediators.Querys
 {
@@ -16,6 +17,13 @@ namespace PruebaIngresoBibliotecario.Api.Mediators.Querys
         public Guid IdPrestamo { get; set; }
     }
 
+    public class GetPrestamoQueryValidation : AbstractValidator<GetPrestamoQuery>
+    {
+        public GetPrestamoQueryValidation()
+        {
+            RuleFor(x => x.IdPrestamo).NotEmpty();
+        }
+    }
     public class GetPrestamoByIdHandler : IRequestHandler<GetPrestamoQuery, GetPrestamoByIdResponseDTO>
     {
         private readonly IProductService _productService;

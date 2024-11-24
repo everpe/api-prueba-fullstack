@@ -60,36 +60,18 @@ namespace PruebaIngresoBibliotecario.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearPrestamo([FromBody] CrearPrestamoCommand command)
         {
-            try
-            {
-                var response = await _mediator.Send(command);
-                return Ok(response);
-            }
-            catch (BadHttpRequestException ex)
-            {
-                return BadRequest(new { mensaje = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Ocurrió un error interno en el servidor.", detalle = ex.Message });
-            }
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
 
 
 
-        [HttpGet("{idPrestamo:guid}")]
+        [HttpGet("{idPrestamo}")]
         public async Task<IActionResult> GetPrestamoById(Guid idPrestamo)
         {
-            try
-            {
-                var query = new GetPrestamoQuery { IdPrestamo = idPrestamo };
-                var response = await _mediator.Send(query);
-                return Ok(response);
-            }
-            catch (BusinessException ex) when (ex.StatusCode == 404)
-            {
-                return NotFound(new { mensaje = ex.Message });
-            }
+            var query = new GetPrestamoQuery { IdPrestamo = idPrestamo };
+            var response = await _mediator.Send(query);
+            return Ok(response);
         }
     }
 }
