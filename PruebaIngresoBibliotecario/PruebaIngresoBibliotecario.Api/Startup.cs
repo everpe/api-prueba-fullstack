@@ -39,9 +39,7 @@ namespace PruebaIngresoBibliotecario.Api
 
             services.AddScoped<IProductService, ProductService>();
 
-            services.AddControllers(mvcOpts =>
-            {
-            });
+            services.AddControllers();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup).Assembly);
