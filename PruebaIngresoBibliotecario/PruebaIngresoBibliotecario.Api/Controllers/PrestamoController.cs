@@ -22,35 +22,13 @@ namespace PruebaIngresoBibliotecario.Api.Controllers
         private readonly PersistenceContext _context;
 
 
-        public PrestamoController(IMediator mediator, PersistenceContext context)
+        public PrestamoController(IMediator mediator)
         {
             _mediator = mediator;
-            _context = context;
         }
 
 
 
-        [HttpGet]
-        [Route("/libros")]
-        public async Task<List<Libro>> Libros()
-        {
-            return await _context.Libros.ToListAsync();
-        }
-
-
-        [HttpGet]
-        [Route("/usuarios")]
-        public async Task<List<Usuario>> Usuarios()
-        {
-            return await _context.Usuarios.ToListAsync();
-        }
-
-        [HttpGet]
-        [Route("/lista")]
-        public async Task<List<Prestamo>> LIstado()
-        {
-            return await _context.Prestamos.ToListAsync();
-        }
 
         /// <summary>
         /// Permite la creación de nuevos prestamos de libros a Usuarios.
@@ -65,7 +43,11 @@ namespace PruebaIngresoBibliotecario.Api.Controllers
         }
 
 
-
+        /// <summary>
+        /// Permite listar los prestamos creados
+        /// </summary>
+        /// <param name="idPrestamo"></param>
+        /// <returns></returns>
         [HttpGet("{idPrestamo}")]
         public async Task<IActionResult> GetPrestamoById(Guid idPrestamo)
         {
