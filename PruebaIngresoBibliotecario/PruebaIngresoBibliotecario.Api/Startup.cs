@@ -12,6 +12,8 @@ using PruebaIngresoBibliotecario.Api.Interfaces;
 using PruebaIngresoBibliotecario.Api.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using PruebaIngresoBibliotecario.Api.Mediators.Behaviors;
+using PruebaIngresoBibliotecario.Api.Infraestructure;
 
 
 
@@ -34,7 +36,7 @@ namespace PruebaIngresoBibliotecario.Api
 
             services.AddSwaggerDocument();
 
-            services.AddDbContext<Infrastructure.PersistenceContext>(opt =>
+            services.AddDbContext<PersistenceContext>(opt =>
             {
                 opt.UseInMemoryDatabase("PruebaIngreso");
             });
@@ -45,6 +47,7 @@ namespace PruebaIngresoBibliotecario.Api
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddValidatorsFromAssembly(typeof(Program).Assembly); // Registra los validadores
             services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingBehavior<,>));
 
             services.AddControllers();
 
@@ -70,7 +73,11 @@ namespace PruebaIngresoBibliotecario.Api
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
+            // Ejecuta los seeds al inicio
+            using var scope = app.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<PersistenceContext>();
+            SeedData.SeedAsync(context).Wait();
         }
+
     }
 }
