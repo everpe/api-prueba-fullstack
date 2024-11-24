@@ -5,6 +5,7 @@ using PruebaIngresoBibliotecario.Api.DTO;
 using PruebaIngresoBibliotecario.Api.Infraestructure;
 using PruebaIngresoBibliotecario.Api.Interfaces;
 using PruebaIngresoBibliotecario.Api.Mediators.Commands;
+using PruebaIngresoBibliotecario.Api.Mediators.Querys;
 using PruebaIngresoBibliotecario.Api.Models;
 using PruebaIngresoBibliotecario.Api.Utilities;
 using System;
@@ -205,5 +206,26 @@ namespace PruebaIngresoBibliotecario.Api.Services
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task<GetPrestamoByIdResponseDTO> GetPrestamosByIdAsync(GetPrestamoQuery request, CancellationToken cancellationToken) 
+        {
+            var prestamo = await _context.Prestamos
+                .Include(p => p.Ejemplar)
+                .FirstOrDefaultAsync(p => p.IdPrestamo == request.IdPrestamo, cancellationToken);
+
+            if (prestamo == null)
+            {
+                throw new BusinessException($"El prestamo con id {request.IdPrestamo} no existe", 404);
+            }
+
+            return new GetPrestamoByIdResponseDTO
+            {
+                Id = prestamo.IdPrestamo,
+                Isbn = prestamo.Ejemplar.Isbn.ToString(),
+                IdentificacionUsuario = prestamo.IdentificacionUsuario,
+                TipoUsuario = (int)prestamo.TipoUsuario,
+                FechaMaximaDevolucion = Convert.ToDateTime(prestamo.FechaMaximaDevolucion.ToString("dd/MM/yyyy"))
+            };
+        }
     }
 }

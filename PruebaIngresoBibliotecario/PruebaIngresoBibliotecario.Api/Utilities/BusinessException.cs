@@ -4,7 +4,12 @@ namespace PruebaIngresoBibliotecario.Api.Utilities
 {
     public class BusinessException : Exception
     {
-        public BusinessException(string message) : base(message) { }
+        public int StatusCode { get; }
+
+        public BusinessException(string message, int statusCode = 400) : base(message)
+        {
+            StatusCode = statusCode;
+        }
     }
 
 }

@@ -9,6 +9,8 @@ using PruebaIngresoBibliotecario.Api.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using PruebaIngresoBibliotecario.Api.Infraestructure;
+using PruebaIngresoBibliotecario.Api.Utilities;
+using PruebaIngresoBibliotecario.Api.Mediators.Querys;
 
 namespace PruebaIngresoBibliotecario.Api.Controllers
 {
@@ -73,5 +75,21 @@ namespace PruebaIngresoBibliotecario.Api.Controllers
             }
         }
 
+
+
+        [HttpGet("{idPrestamo:guid}")]
+        public async Task<IActionResult> GetPrestamoById(Guid idPrestamo)
+        {
+            try
+            {
+                var query = new GetPrestamoQuery { IdPrestamo = idPrestamo };
+                var response = await _mediator.Send(query);
+                return Ok(response);
+            }
+            catch (BusinessException ex) when (ex.StatusCode == 404)
+            {
+                return NotFound(new { mensaje = ex.Message });
+            }
+        }
     }
 }
