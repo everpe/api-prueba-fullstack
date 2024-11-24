@@ -57,8 +57,9 @@ namespace PruebaIngresoBibliotecario.Infrastructure
                       .HasMaxLength(10);
                 entity.Property(u => u.Nombre).IsRequired();
                 entity.Property(u => u.TipoUsuario)
-                      .IsRequired();
-                      //.HasDefaultValue(1); // Afiliado por defecto
+                      .IsRequired()
+                      .HasComment("1 = Afiliado, 2 = Empleado, 3 = Invitado");
+                        //.HasDefaultValue(1); // Afiliado por defecto
 
                 entity.HasIndex(u => u.IdentificacionUsuario)
                       .IsUnique()
@@ -76,6 +77,10 @@ namespace PruebaIngresoBibliotecario.Infrastructure
                       .WithMany(u => u.Prestamos)
                       .HasForeignKey(p => p.IdentificacionUsuario)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(p => p.TipoUsuario)
+                      .IsRequired()
+                      .HasComment("1 = Afiliado, 2 = Empleado, 3 = Invitado");
                 entity.Property(p => p.FechaPrestamo).IsRequired();
                 entity.Property(p => p.FechaMaximaDevolucion).IsRequired();
             });

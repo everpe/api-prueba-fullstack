@@ -10,6 +10,8 @@ using MediatR;
 using AutoMapper;
 using PruebaIngresoBibliotecario.Api.Interfaces;
 using PruebaIngresoBibliotecario.Api.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 
 
@@ -37,12 +39,14 @@ namespace PruebaIngresoBibliotecario.Api
                 opt.UseInMemoryDatabase("PruebaIngreso");
             });
 
+
             services.AddScoped<IProductService, ProductService>();
-
-            services.AddControllers();
-
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup).Assembly);
+            services.AddValidatorsFromAssembly(typeof(Program).Assembly); // Registra los validadores
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+            services.AddControllers();
 
 
         }
