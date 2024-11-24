@@ -46,7 +46,7 @@ namespace PruebaIngresoBibliotecario.Api.Services
             return new CrearPrestamoResponseDTO
             {
                 Id = prestamo.IdPrestamo,
-                FechaMaximaDevolucion = prestamo.FechaMaximaDevolucion.ToString("dd/MM/yyyy")
+                FechaMaximaDevolucionDate = prestamo.FechaMaximaDevolucion
             };
         }
 
